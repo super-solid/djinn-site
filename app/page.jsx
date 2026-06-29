@@ -1,6 +1,7 @@
 "use client"
 import { useState } from "react"
 import Image from "next/image"
+import { track } from "@vercel/analytics"
 
 export default function Home() {
   const [email, setEmail] = useState("")
@@ -16,7 +17,12 @@ export default function Home() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       })
-      setState(res.ok ? "done" : "error")
+      if (res.ok) {
+        track("waitlist_submit", { email })
+        setState("done")
+      } else {
+        setState("error")
+      }
     } catch {
       setState("error")
     }
@@ -46,6 +52,7 @@ export default function Home() {
 
         <a
           href="#access"
+          onClick={() => track("cta_click", { location: "hero" })}
           className="border border-gold text-gold px-8 py-3 text-sm tracking-widest uppercase hover:bg-gold hover:text-black transition-colors duration-200"
         >
           Request access
@@ -236,9 +243,14 @@ export default function Home() {
             height={32}
             className="opacity-30 hover:opacity-60 transition-opacity"
           />
-          <p className="text-white/20 text-xs font-light tracking-wide">
-            Built in Buenos Aires.
-          </p>
+          <div className="flex items-center gap-6">
+            <a href="/handbook" className="text-white/20 text-xs font-light hover:text-white/50 transition-colors tracking-wide">
+              Handbook
+            </a>
+            <p className="text-white/20 text-xs font-light tracking-wide">
+              Built in Buenos Aires.
+            </p>
+          </div>
         </div>
       </footer>
 

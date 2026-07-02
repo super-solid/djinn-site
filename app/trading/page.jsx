@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 
-const API_URL = "http://142.93.238.136:8080/api/bot/api/state"
+const API_URL = "/api/bot"
 const REFRESH_MS = 5000
 
 function fmt(n, decimals = 2) {
